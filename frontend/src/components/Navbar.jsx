@@ -2,7 +2,7 @@ import React from "react";
 import { Link } from "react-router-dom";
 
 const Navbar = () => {
-  const isLoggedIn = true; // dummy
+  const isLoggedIn = false; // dummy
 
   return (
     <nav className="navbar navbar-expand-lg navbar-light bg-white shadow-sm">

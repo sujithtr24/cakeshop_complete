@@ -19,6 +19,7 @@ def register(request):
     return Response(serializer.errors)
 
 
+from rest_framework_simplejwt.tokens import RefreshToken
 # LOGIN
 @api_view(['POST'])
 def login(request):
@@ -26,23 +27,26 @@ def login(request):
     email = request.data.get('email')
     password = request.data.get('password')
 
-    user = Customer_table.objects.filter(
+    user = Customer_table.objects.get(
         customer_email=email,
         customer_password=password
     )
 
     if user:
+        refresh = RefreshToken.for_user(user)
         return Response({
-            "message": "Login success",
-            "user_id": user[0].id,
-            "name": user[0].customer_name
+            "access" : str(refresh.access_token),
+            "refresh" : str(refresh)
         })
 
     return Response({"error": "Invalid email or password"})
 
 
+from rest_framework.permissions import IsAuthenticated
+from rest_framework.decorators import permission_classes
 # ADD TO CART
 @api_view(['POST'])
+@permission_classes([IsAuthenticated])
 def add_to_cart(request):
 
     user_id = request.data.get('user_id')

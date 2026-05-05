@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import Navbar from "../../components/Navbar";
 import Footer from "../../components/Footer";
+import { API } from "../../api/api";
 
 const Login = () => {
   const [form, setForm] = useState({
@@ -14,14 +15,19 @@ const Login = () => {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
-    // dummy validation
-    if (form.email === "admin@gmail.com" && form.password === "1234") {
-      alert("Login success");
-    } else {
-      setError("Invalid email or password");
+    const res = await API.post("login/", form)
+    console.log(res.data)
+
+    if(res.data){
+      const token = res.data.access
+
+      localStorage.setItem("token",token)
+      alert("Login sucessfull")
+    }else{
+      alert("Error")
     }
   };
 

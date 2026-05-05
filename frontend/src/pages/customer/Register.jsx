@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import Navbar from "../../components/Navbar";
 import Footer from "../../components/Footer";
+import { API } from "../../api/api";
 
 const Register = () => {
   const [form, setForm] = useState({
@@ -14,10 +15,17 @@ const Register = () => {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log(form);
-    alert("Registered successfully (dummy)");
+    
+    const res = await API.post("register/", {
+      customer_name : form.username,
+      customer_email : form.email,
+      customer_password : form.password,
+      customer_phn : form.phone
+    });
+
+    alert(res.data.message);
   };
 
   return (
